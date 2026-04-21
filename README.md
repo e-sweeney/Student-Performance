@@ -9,6 +9,9 @@ Both these pages should be placed in a templates directory as you are using the 
 
 app.py will serve the model.
 
-train.py will train the model and produce a model.pkl file.
+trainBackup.py will train the model and produce a model.pkl file - old file
+
+train.py trains the regression model and records metric and model with mlflow.  Please ensure mlflow is running.
 
 Student_Performance.csv is the dataset required.
+
