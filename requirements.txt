@@ -2,3 +2,5 @@ pandas
 numpy
 flask
 scikit-learn
+joblib
+mlflow
