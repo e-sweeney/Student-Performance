@@ -1,6 +1,6 @@
 pandas
 numpy
-joblib
-Flask
+flask
 scikit-learn
+joblib
 mlflow
