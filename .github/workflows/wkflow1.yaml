@@ -46,10 +46,4 @@ jobs:
               run: |
                 docker push edwinasweeney/my-app-es:latest
                 docker images
-
-            - name: Cleanup MLFlow
-              run: |
-                docker stop mlflow-server
-                docker rm mlflow-server
-                docker rmi ghcr.io/mlflow/mlflow:latest
       
