@@ -10,7 +10,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 
 
 
-mlflow.set_tracking_uri("http://localhost:5555")
+mlflow.set_tracking_uri("http://127.0.0.1:5555")
 
 # Load dataset (Example: Insurance Charges Dataset. Remove first column index)
 df = pd.read_csv("Student_Performance.csv")
