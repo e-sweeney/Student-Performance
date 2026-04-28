@@ -9,8 +9,7 @@ sp
   source:
     repoURL: https://github.com/e-sweeney/Student-Performance.git
     targetRevision: main
-    path: k8s   # 👈 folder in your repo containing manifests
-
+    path: k8s   
   destination:
     server: https://kubernetes.default.svc
     namespace: default
