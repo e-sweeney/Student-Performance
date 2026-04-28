@@ -3,9 +3,9 @@ kind: Application
 metadata:
   name: flask-app
   namespace: argocd
-sp
+    
+spec:
   project: default
-
   source:
     repoURL: https://github.com/e-sweeney/Student-Performance.git
     targetRevision: main
