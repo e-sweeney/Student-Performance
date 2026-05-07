@@ -1,18 +1,44 @@
-name: Dosomething
-on:
-    workflow_dispatch:
-    
+name: Build PKL and Upload to GCS
 
-  
+on: workflow_dispatch
 
 jobs:
-    job-name:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v6
-            - name: Printing Folders
-              run:
-                ls
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Build
+        run: |
+          mkdir dist
+          echo "Hello from GCP Bucket" > dist/output.txt
+
+      # Authenticate with GCP
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # Install gcloud SDK
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      # Upload to bucket
+      - name: Upload to GCS
+        run: |
+          gsutil cp -r dist/* gs://artefact-bucket/builds/${{ github.run_id }}/
+
+      # Download from bucket
+      - name: Download from GCS
+        run: |
+          mkdir ./gcs
+          gsutil cp -r gs://artefact-bucket/builds/${{ github.run_id }}/output.txt ./gcs
+          pwd
+          echo "this is the contents of the default directory"
+          ls
+          echo " this is the contents of the gcp directory showing text files only"
+          ls -l ./gcs/*.txt
          
       
