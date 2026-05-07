@@ -1,5 +1,4 @@
-name: Build PKL and Upload to GCS
-
+name: Build Image and Push to Docker
 on: workflow_dispatch
 
 jobs:
@@ -8,14 +7,7 @@ jobs:
 
     steps:
     
-      - name: Authenticate to GCP
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-   
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
+     
 
       - name: Login to Docker
         uses: docker/login-action@v1
@@ -26,50 +18,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.12'
-          
-      - name: Train Model
-        run: |
-          cd app
-          pip install -r requirements.txt
-          python model.py  
-          echo "This is the contents of the current directory"
-          ls -l
-      
-
-      - name: Upload to GCS
-        run: |
-          gsutil cp *.pkl gs://artefact-bucket/builds/${{ github.run_id }}/
-      
-      
-      
-      
-      
       - name: BuildImage
         run: |
-          #cd app
-          docker build . -t ${{secrets.DOCKER_HUB_USERNAME}}/salarymodel:latest
+          cd app
+          docker build . -t ${{secrets.DOCKER_HUB_USERNAME}}/studentperformance:latest
 
       - name: PushToHub
-        run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/salarymodel:latest 
+        run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/studentperformance:latest 
 
           
-          docker build . -t ${{secrets.DOCKER_HUB_USERNAME}}/salarymodel:latest
-
+         
       
      
-      # Download from bucket
-      - name: Download from GCS
-        run: |
-          mkdir ./gcs
-          gsutil cp -r gs://artefact-bucket/builds/${{ github.run_id }}/output.txt ./gcs
-          pwd
-          echo "this is the contents of the default directory"
-          ls
-          echo " this is the contents of the gcp directory showing text files only"
-          ls -l ./gcs/*.txt
-         
+              
       
