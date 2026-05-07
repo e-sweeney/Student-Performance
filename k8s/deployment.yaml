@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: flask-app-es
-          image: edwinasweeney/flaskapp:v1
+          image: edwinasweeney/studentperformance:latest
           ports:
             - containerPort: 5000
