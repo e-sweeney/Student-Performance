@@ -30,7 +30,7 @@ def predict():
     # Predict charges
     prediction = model.predict(features)
     #  Format to float and 2 decimal places
-    formatted_prediction = f"The predicted value is ${round(float(prediction), 2)}"
+    formatted_prediction = f"The predicted value is ${round(float(prediction[0]), 2)}"
 
 
     return render_template("result.html", prediction=formatted_prediction)
