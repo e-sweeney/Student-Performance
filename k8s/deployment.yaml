@@ -16,4 +16,4 @@ spec:
         - name: flask-app-es
           image: edwinasweeney/flaskapp:v1
           ports:
-            - containerPort: 80
+            - containerPort: 5000

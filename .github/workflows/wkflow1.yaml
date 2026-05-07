@@ -1,49 +1,75 @@
-name: PublishImage
-on:
-    workflow_dispatch  
-    #this will only run if Dockerfile changes after a push
-    #push:
-    #    branches:
-    #        - main
-    #    paths:
-    #        - './Dockerfile'
-              
+name: Build PKL and Upload to GCS
 
-  
+on: workflow_dispatch
 
 jobs:
-    publish_images:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v6
-            - name: Printing Folders
-              run:
-                ls
-            - name: Login to Docker
-              uses: docker/login-action@v1
-              with:
-                username: ${{secrets.DOCKER_HUB_USERNAME}}
-                password: ${{secrets.DOCKER_HUB_ACCESS_TOKEN}}
-            
-            
-            - name: Install MLflow
-              run: pip install mlflow
+  upload:
+    runs-on: ubuntu-latest
 
-            - name: Start MLflow server
-              run: |
-                mlflow server \
-                      --host 127.0.0.1 \
-                      --port 5555 \
-                      --backend-store-uri sqlite:///mlflow.db \
-                      --default-artifact-root ./mlruns &
-            ## need to add code which will separate out training and testing from Dockerfile
-            - name: build image
-              run: |
-                cd app 
-                docker build . -t   edwinasweeney/my-app-es:latest
-            - name: push image to docker hub
-              run: |
-                docker push edwinasweeney/my-app-es:latest
-                docker images
+    steps:
+    
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+   
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Login to Docker
+        uses: docker/login-action@v1
+        with:
+            username: ${{secrets.DOCKER_HUB_USERNAME}}
+            password: ${{secrets.DOCKER_HUB_ACCESS_TOKEN}}
+
+      - name: Checkout
+        uses: actions/checkout@v6
+      
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          
+      - name: Train Model
+        run: |
+          cd app
+          pip install -r requirements.txt
+          python model.py  
+          echo "This is the contents of the current directory"
+          ls -l
+      
+
+      - name: Upload to GCS
+        run: |
+          gsutil cp *.pkl gs://artefact-bucket/builds/${{ github.run_id }}/
+      
+      
+      
+      
+      
+      - name: BuildImage
+        run: |
+          #cd app
+          docker build . -t ${{secrets.DOCKER_HUB_USERNAME}}/salarymodel:latest
+
+      - name: PushToHub
+        run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/salarymodel:latest 
+
+          
+          docker build . -t ${{secrets.DOCKER_HUB_USERNAME}}/salarymodel:latest
+
+      
+     
+      # Download from bucket
+      - name: Download from GCS
+        run: |
+          mkdir ./gcs
+          gsutil cp -r gs://artefact-bucket/builds/${{ github.run_id }}/output.txt ./gcs
+          pwd
+          echo "this is the contents of the default directory"
+          ls
+          echo " this is the contents of the gcp directory showing text files only"
+          ls -l ./gcs/*.txt
+         
       
