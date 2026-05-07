@@ -37,7 +37,7 @@ jobs:
                       --port 5555 \
                       --backend-store-uri sqlite:///mlflow.db \
                       --default-artifact-root ./mlruns &
-            
+            ## need to add code which will separate out training and testing from Dockerfile
             - name: build image
               run: |
                 cd app 
