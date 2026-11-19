@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/e-sweeney/mlModel.git
+    repoURL: https://github.com/e-sweeney/studentperformance.git
     targetRevision: main
     path: k8
   destination:
@@ -25,7 +25,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/e-sweeney/mlModel.git
+    repoURL: https://github.com/e-sweeney/studentperformance.git
     targetRevision: main
     path: k8
   destination:
