@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/e-sweeney/studentperformance.git
+    repoURL: https://github.com/e-sweeney/Student-Performance.git
     targetRevision: main
-    path: k8
+    path: k8s
   destination:
     server: https://kubernetes.default.svc
     namespace: testing
@@ -25,9 +25,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/e-sweeney/studentperformance.git
+    repoURL: https://github.com/e-sweeney/Student-Performance.git
     targetRevision: main
-    path: k8
+    path: k8s
   destination:
     server: https://kubernetes.default.svc
     namespace: production
